@@ -4,11 +4,13 @@ import Main from './components/Main';
 import Loader from './components/Loader';
 import Error from './components/Error';
 import StartScreen from './components/StartScreen';
+import Question from './components/Question';
 
 const initialState = {
   questions: [],
   // 'loading', 'error', 'ready', 'active', 'finished'
   status: 'loading',
+  index: 0,
 };
 
 function reducer(state, action) {
@@ -17,13 +19,18 @@ function reducer(state, action) {
       return { ...state, questions: action.payload, status: 'ready' };
     case 'dataFailed':
       return { ...state, status: 'error' };
+    case 'start':
+      return { ...state, status: 'active' };
     default:
       throw new Error('Action unknown');
   }
 }
 
 export default function App() {
-  const [{ status, questions }, dispatch] = useReducer(reducer, initialState);
+  const [{ status, questions, index }, dispatch] = useReducer(
+    reducer,
+    initialState,
+  );
 
   const numQuestions = questions.length;
 
@@ -51,9 +58,15 @@ export default function App() {
           <StartScreen>
             <h2>Welcome to the React Quiz!</h2>
             <h3>{numQuestions} questions to test your React mastery</h3>
-            <button className="btn">Let's Start</button>
+            <button
+              onClick={() => dispatch({ type: 'start' })}
+              className="btn btn-ui"
+            >
+              Let's Start
+            </button>
           </StartScreen>
         )}
+        {status === 'active' && <Question question={questions[index]} />}
       </Main>
     </div>
   );
