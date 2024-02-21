@@ -1,6 +1,9 @@
 import { useEffect, useReducer } from 'react';
 import Header from './components/Header';
 import Main from './components/Main';
+import Loader from './components/Loader';
+import Error from './components/Error';
+import StartScreen from './components/StartScreen';
 
 const initialState = {
   questions: [],
@@ -20,7 +23,9 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [{ status, questions }, dispatch] = useReducer(reducer, initialState);
+
+  const numQuestions = questions.length;
 
   useEffect(() => {
     async function getQuestions() {
@@ -40,8 +45,15 @@ export default function App() {
     <div className="app">
       <Header />
       <Main>
-        <p>1/15</p>
-        <p>Question?</p>
+        {status === 'loading' && <Loader />}
+        {status === 'error' && <Error />}
+        {status === 'ready' && (
+          <StartScreen>
+            <h2>Welcome to the React Quiz!</h2>
+            <h3>{numQuestions} questions to test your React mastery</h3>
+            <button className="btn">Let's Start</button>
+          </StartScreen>
+        )}
       </Main>
     </div>
   );
