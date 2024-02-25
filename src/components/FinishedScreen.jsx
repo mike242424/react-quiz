@@ -2,6 +2,7 @@ export default function FinishedScreen({
   points,
   totalPointsPossible,
   highscore,
+  dispatch,
 }) {
   const scorePercentage = (points / totalPointsPossible) * 100;
 
@@ -24,6 +25,12 @@ export default function FinishedScreen({
         <span>{emoji}</span>
       </p>
       <p className="highscore">Highscore: {highscore} Points</p>
+      <button
+        onClick={() => dispatch({ type: 'restart' })}
+        className="btn btn-ui"
+      >
+        Restart Quiz
+      </button>
     </>
   );
 }
